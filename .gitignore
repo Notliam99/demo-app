@@ -1,4 +1,4 @@
 /dist/
 /target/
 /Cargo.lock
-src-tauri/gen/
+/src-tauri/gen/
