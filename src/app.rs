@@ -1,8 +1,10 @@
+// use my_demo_app_ui::get_os;
 use serde::{Deserialize, Serialize};
 use serde_wasm_bindgen::to_value;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
-use yew::prelude::*;
+// use yew::prelude::*;
+use yew::*;
 
 #[wasm_bindgen]
 extern "C" {
@@ -19,6 +21,29 @@ struct GreetArgs<'a> {
 struct DoubleArgs {
     number: i64,
 }
+
+#[function_component(UseEffect)]
+pub fn os() -> Html {
+    let os = use_state(|| String::new());
+
+    let os = os.clone();
+    spawn_local(async move {
+        os.set(invoke("get_os", JsValue::null()).await.as_string().unwrap());
+    });
+
+    html! {stringify!(os)}
+}
+
+// #[function_component]
+// fn Os() -> Html {
+//     let os = os();
+//
+//     html! {
+//         <p>
+//             {&os}
+//         </p>
+//     }
+// }
 
 #[function_component(App)]
 pub fn app() -> Html {
@@ -61,6 +86,8 @@ pub fn app() -> Html {
         })
     };
 
+    // let os: Html = Os();
+
     html! {
         <main class="container">
             <div class="row">
@@ -89,6 +116,7 @@ pub fn app() -> Html {
             </form>
 
             <p><b>{ &*greet_msg }</b></p>
+            <p><UseEffect /></p>
         </main>
     }
 }
